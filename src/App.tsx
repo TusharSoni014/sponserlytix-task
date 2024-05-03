@@ -105,45 +105,13 @@ export interface AnimeResponse {
   }[];
 }
 
-// function App() {
-//   const [animeList, setAnimeList] = useState<AnimeResponse[]>([]);
-
-//   const fetchTop20Anime = async () => {
-//     const response = await axios.get(
-//       "https://api.jikan.moe/v4/top/anime?filter=bypopularity&limit=20"
-//     );
-//     setAnimeList(response.data.data);
-//   };
-
-//   useEffect(() => {
-//     fetchTop20Anime();
-//   }, []);
-
-//   return (
-//     <div className="w-full min-h-screen p-5 gap-5 bg-black text-white grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))]">
-//       {animeList?.map((anime, index) => {
-//         return <AnimeCard anime={anime} rank={index + 1} />;
-//       })}
-//     </div>
-//   );
-// }
-
-// export default App;
-
 import { useEffect, useState } from "react";
 import AnimeCard from "./components/AnimeCard";
 import axios from "axios";
 import AnimeChart from "./components/AnimeChart";
 
-// export interface AnimeResponse {
-//   mal_id: number;
-//   year: number; // Add year property to the interface
-//   // Rest of the properties remain the same
-// }
-
 function App() {
   const [animeList, setAnimeList] = useState<AnimeResponse[]>([]);
-  const [chartData, setChartData] = useState<any[]>([]);
 
   const fetchTop20Anime = async () => {
     const response = await axios.get(
@@ -151,26 +119,6 @@ function App() {
     );
     const animeData = response.data.data;
     setAnimeList(animeData);
-
-    // Process data for chart
-    const dataByYear: { [year: number]: number } = {};
-    animeData.forEach((anime: AnimeResponse) => {
-      const { year } = anime;
-      if (dataByYear[year]) {
-        dataByYear[year]++;
-      } else {
-        dataByYear[year] = 1;
-      }
-    });
-
-    const sortedYears = Object.keys(dataByYear).sort(
-      (a, b) => parseInt(a) - parseInt(b)
-    );
-    const chartData = sortedYears.map((year) => ({
-      year: parseInt(year),
-      animeCount: dataByYear[parseInt(year)],
-    }));
-    setChartData(chartData);
   };
 
   useEffect(() => {
@@ -195,11 +143,13 @@ function App() {
 
   const animeByYear = groupAnimeByYear(animeList);
 
-  const chartDataNew = Object.entries(animeByYear).map(([year, { count, titles }]) => ({
-    year: parseInt(year),
-    count,
-    titles,
-  }));
+  const chartDataNew = Object.entries(animeByYear).map(
+    ([year, { count, titles }]) => ({
+      year: parseInt(year),
+      count,
+      titles,
+    })
+  );
 
   return (
     <div className="relative w-full min-h-screen p-5 bg-black text-white">
