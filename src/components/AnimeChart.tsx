@@ -1,6 +1,6 @@
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -39,10 +39,20 @@ interface ChartData {
 
 export default function AnimeChart({ chartData }: { chartData: ChartData[] }) {
   return (
-    <div className="w-full max-w-lg mx-auto">
+    <div className="w-full">
       <h1 className="text-2xl font-bold mb-3">Top Anime Released by Year</h1>
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={chartData}>
+        <AreaChart data={chartData}>
+          <defs>
+            <linearGradient id="colorUv" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="5%" stopColor="#ff0000" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#ff0000" stopOpacity={0.3} />
+            </linearGradient>
+            <linearGradient id="colorPv" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="5%" stopColor="#800080" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#800080" stopOpacity={0.3} />
+            </linearGradient>
+          </defs>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="year"
@@ -52,13 +62,14 @@ export default function AnimeChart({ chartData }: { chartData: ChartData[] }) {
           />
           <YAxis dataKey="count" type="number" />
           <Tooltip content={<CustomTooltip />} />
-          <Line
-            type="monotone"
+          <Area
+            type="natural"
             dataKey="count"
             stroke="#8884d8"
+            fill="url(#colorPv)"
             activeDot={{ r: 8 }}
           />
-        </LineChart>
+        </AreaChart>
       </ResponsiveContainer>
     </div>
   );
